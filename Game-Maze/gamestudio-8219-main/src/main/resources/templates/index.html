@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Site</title>
+    <link rel="icon"n type="image/jpg" href="/images/Untitled.jpg">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/Game.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+
+
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<nav>
+    <div class="boxBar">
+
+        <input type="checkbox" id="btnControl"/>
+        <label class="btn" for="btnControl"><img src="/images/navigation-bar-icon-18.jpg" width="74" height="100%"></label>
+
+
+
+        <div class="list" id="lara">
+            <ul class="nameList">
+
+
+
+                <li id="Story">Story</li>
+                <li id="Maze">Maze</li>
+                <li id="Location">Station</li>
+                <div><p class="to" id="aboutusText">
+                </p></div>
+
+
+            </ul>
+
+        </div>
+
+    </div>
+    <script src="/Javascript/story.js">
+
+
+
+    </script>
+
+</nav>
+
+
+<div class="Feedback">
+    <div class="tlacidlo">
+        <button id="option1">Top Score</button>
+        <button id="option2">Comment</button><hr id="odsek">
+    </div>
+
+    <div class="zaznam">
+        <table id="ScoreServiceTable"><thead><tr><th>Place</th><th>Player</th><th>Points</th><th>Played at</th></tr></thead><tbody></tbody></table>
+        <div class="rara">
+            <table id="CommentServiceTable"><thead><tr><th>Player</th><th>Comment</th><th>Played at</th></tr></thead><tbody></tbody></table>
+        </div>
+
+    </div>
+    <div class="Containerrating1">
+        <h5>Avarage rating from users &nbsp    </h5>
+        <div class="box0">
+            <div th:utext="${@userController.AvarageRating()}" class="realAvarage">
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="Containerrating">
+
+
+
+
+
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        // Define a function to load scores
+        function loadScores(url, tableID, firstAtribute, secondAtribute, thirdAtribute, hasNumbering) {
+            $.ajax({
+                url: url,
+            }).done(function (json) {
+                for (var i = 0; i < json.length; i++) {
+                    var score = json[i];
+                    var numbering = hasNumbering ? "<td>"+(i+1)+"</td>" : "";
+                    $(tableID + " tbody").append($("<tr>"+numbering+"<td>" + score[firstAtribute] + "<td>" + score[secondAtribute] + "<td>" + score[thirdAtribute] + "</tr>"));
+
+                }
+            });
+        }
+
+        loadScores("/api/score/Maze", "#ScoreServiceTable", "player","point", "playerAt", true);
+        loadScores("/api/comment/Maze", "#CommentServiceTable", "player","comment", "player_at", false);
+    });
+
+    console.log("halo");
+
+
+</script>
+
+<script>
+    // Get the button elements
+    var option1Button = document.getElementById("option1");
+    var option2Button = document.getElementById("option2");
+
+    // Get the tables
+    var scoreTable = document.getElementById("ScoreServiceTable");
+    var commentTable = document.getElementById("CommentServiceTable");
+
+    // Get the Feedback div
+    var feedbackDiv = document.querySelector(".Feedback");
+
+    // Add click event listeners to the buttons
+    option1Button.addEventListener("click", function() {
+        scoreTable.style.display = "table"; // Display the score table
+        commentTable.style.display = "none"; // Hide the comment table
+        feedbackDiv.style.display = "block"; // Display the Feedback div
+    });
+
+    option2Button.addEventListener("click", function() {
+        scoreTable.style.display = "none"; // Hide the score table
+        commentTable.style.display = "table"; // Display the comment table
+        feedbackDiv.style.display = "block"; // Display the Feedback div
+    });
+</script>
+
+</div>
+
+    <div class="Login-Register">
+        <div class="Box1" th:if="not ${@userController.isLoggedIn()}">
+        <form th:action="${@userController.isLoggedIn() ? null : '/login'}">
+        <div class="box1">
+
+            <h1>Login</h1>
+
+            <div class="date">
+                <span class="login-text">Login:</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="login" /><br/>
+                <span class="login-text">Password:</span><input type="password" name="password"/><br/>
+            </div>
+            <div class="Login-submit">
+            <input type ="submit"/>
+             </div>
+            <div class="login-Register">
+                <p>Don t have an account?<a href="#" class="RegisterLink">Register</a></p>
+            </div>
+        </div>
+
+
+        </form>
+    </div>
+        <div class="Box2" >
+            <form action="/Registration" method="post">
+                <div class="box1">
+
+                    <h1>Registration</h1>
+
+                    <div class="date">
+                        <span class="login-text">Login:</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="login" required minlength="6"/><br/>
+                        <span class="login-text">Password:</span><input type="password" name="password" required minlength="6" pattern="^[^\s]+$" title="No spaces allowed"/><br/>
+                        <span class="login-text">Email:</span><input type="email" name="email" required minlength="6" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="No spaces allowed"/><br/>
+                    </div>
+                    <div class="Login-submit">
+                        <input type ="submit" value="Submit"/>
+                    </div>
+                    <div class="login-Register">
+                        <p>Don t have an account?<a href="#" class="LoginLink">Login</a></p>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+
+
+<div class="Box3" th:if="${@userController.isLoggedIn()}">
+    <form action="/logout">
+        <div class="box1">
+
+            <h1>You are logged in</h1>
+
+
+
+            <div class="date">
+                <a href="Mazes" >Return to Game:</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+
+            </div>
+
+
+            <div class="Login-submit">
+
+                <button>Logout</button>
+            </div>
+
+
+        </div>
+
+
+    </form>
+</div>
+</div>
+
+
+    </div>
+<script src="/Javascript/test.js"></script>
+
+<script src="/Javascript/login.js"></script>
+
+
+
+<video autoplay muted playsinline loop class="video1">
+    <source src="/images/production_id%204182916%20(2160p).mp4">
+</video>
+
+
+</body>
+</html>
+
+<!--<h1>Mazeswapper</h1>
+<a th:if=" ${@userController.logged}" href="/logout">Logout</a>
+<form th:if="not ${@userController.logged}" action="/login" method="post">
+    Login:<input type="text" name="login"/><br/>
+    Password:<input type="password" name="password"/><br/>
+    <input type ="submit"/>
+
+</form>
+</body>
+</html>-->

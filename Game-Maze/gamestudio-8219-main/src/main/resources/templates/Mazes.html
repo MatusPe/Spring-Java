@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/Game.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+
+
+    <title>Title</title>
+</head>
+<body>
+
+<nav>
+    <div class="boxBar">
+
+        <input type="checkbox" id="btnControl"/>
+        <label class="btn" for="btnControl"><img src="/images/navigation-bar-icon-18.jpg" width="74" height="100%"></label>
+
+
+
+        <div class="list" id="lara">
+            <ul class="nameList">
+
+
+
+                <li id="Story"><a href="/logout">Logout</a></li>
+
+
+
+            </ul>
+
+        </div>
+
+    </div>
+    <script src="/Javascript/story.js">
+
+
+
+    </script>
+
+</nav>
+
+
+
+
+<h2 class="title">Mazes</h2>
+
+    <ol>
+
+        <li th:each="score:${scores}">
+            <span th:text="${score.player}"></span>
+            <span th:text="${score.point}"></span>
+        </li>
+    </ol>
+<ol th:each="score:${scores}"></ol>
+
+<h1 ></h1>
+<div class="all">
+<div class="Feedback">
+    <div class="tlacidlo">
+    <button id="option1">Top Score</button>
+    <button id="option2">Comment</button><hr id="odsek">
+</div>
+
+    <div class="zaznam">
+        <table id="ScoreServiceTable"><thead><tr><th>Place</th><th>Player</th><th>Points</th><th>Played at</th></tr></thead><tbody></tbody></table>
+        <div class="rara">
+        <table id="CommentServiceTable"><thead><tr><th>Player</th><th>Comment</th><th>Played at</th></tr></thead><tbody></tbody></table>
+        </div>
+
+    </div>
+    <div class="Containerrating1">
+        <h5>Avarage rating from users &nbsp    </h5>
+        <div class="box0">
+            <div th:utext="${@userController.AvarageRating()}" class="realAvarage">
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="Containerrating">
+
+        <div class="rating">
+            <input type="radio" name="rate" id="rate-1">
+            <label for="rate-1" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-2">
+            <label for="rate-2" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-3">
+            <label for="rate-3" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-4">
+            <label for="rate-4" class="fas fa-star"></label>
+            <input type="radio" name="rate" id="rate-5">
+            <label for="rate-5" class="fas fa-star"></label>
+        </div>
+
+
+
+        <form action="/RatingandComment" method="get">
+
+            <h1 id="Rate">Terible game</h1>
+        <div class="Commentar">
+            <textarea name="comment" cols="40" rows="6"></textarea>
+        </div>
+            <div class="post">
+                <input id="rateee" type="hidden" name="rating" value="1">
+                <button type="submit">Post</button>
+            </div>
+
+        </form>
+    </div>
+    </div>
+
+</div>
+<div  class="AvaregeRating">
+    <div class="realAvarage2">Your Score and Feedback</div>
+    <div class="realAvarage1">
+        <div th:utext="${@userController.GetmyScoreandRating()}" class="realAvarage3">
+
+    </div>
+
+
+
+    </div>
+
+
+</div>
+<script>
+    let fraze=["Terrible game","Average game", "Good game", "Great game", "Excellent game"];
+
+    let h1=document.getElementById("Rate");
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.rating input[type="radio"]');
+        stars.forEach(function(star, index) {
+            star.addEventListener('change', function() {
+                h1.textContent=fraze[Math.abs((index-4))];
+                document.getElementById("rateee").value=Math.abs((index-4))+1;
+
+                // Do something else here based on the clicked star
+            });
+        });
+    });
+</script>
+<script>
+
+
+    // Call the function to start updating the average rating
+
+</script>
+<script>
+    // Get the button elements
+    var option1Button = document.getElementById("option1");
+    var option2Button = document.getElementById("option2");
+
+    // Get the tables
+    var scoreTable = document.getElementById("ScoreServiceTable");
+    var commentTable = document.getElementById("CommentServiceTable");
+
+    // Get the Feedback div
+    var feedbackDiv = document.querySelector(".Feedback");
+
+    // Add click event listeners to the buttons
+    option1Button.addEventListener("click", function() {
+        scoreTable.style.display = "table"; // Display the score table
+        commentTable.style.display = "none"; // Hide the comment table
+        feedbackDiv.style.display = "block"; // Display the Feedback div
+    });
+
+    option2Button.addEventListener("click", function() {
+        scoreTable.style.display = "none"; // Hide the score table
+        commentTable.style.display = "table"; // Display the comment table
+        feedbackDiv.style.display = "block"; // Display the Feedback div
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<div class="box1">
+<script type="text/javascript">
+
+    var number=0;
+
+
+    document.addEventListener('keydown', function(event) {
+        // Send key pressed to the server
+        if (document.activeElement.tagName.toLowerCase() !== 'textarea') {
+            console.log("lalal")
+            fetch('/keypress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({key: event.key})
+
+            }).then(function (response) {
+                // Check if the fetch request was successful
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // If successful, call refreshMinefield
+                refreshMinefield("/Mazes/Maze");
+            });
+        }
+
+    });
+
+
+
+
+
+
+    //<![CDATA[
+    $(document).ready(function () {
+        refreshMinefield("/Mazes/Maze");
+    });
+
+
+
+
+    var stop=0;
+
+    function refreshMinefield(url) {
+
+
+        number++;
+        console.log(number);
+        $.ajax({
+            url: url,
+        }).done(function (html) {
+            $("#minefieldFromService").html(html);
+
+
+        });
+    }
+    //]]>
+</script>
+
+
+    <script>
+        var number = 30;
+        var countdownStarted=false;
+
+        // Funkce pro spuštění odpočtu
+        function startCountdown() {
+            // Zobrazí počáteční číslo
+            console.log(number);
+
+            // Spustí odpočet každou sekundu
+            var countdown = setInterval(function() {
+                number--; // Sníží číslo o 1
+                // Zobrazí aktuální číslo
+                console.log(number);
+
+                // Zastaví odpočet, když dosáhne 0
+                if (number === 0) {
+                    clearInterval(countdown);
+                    window.location.href = "/endGame";
+                }
+            }, 1000);
+        }
+
+        document.addEventListener("click", function() {
+            if (!countdownStarted) {
+                countdownStarted = true; // Set flag to indicate countdown started
+                startCountdown(); // Start the countdown
+            }
+        });
+
+
+
+
+
+
+    </script>
+
+
+</div>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        // Define a function to load scores
+        function loadScores(url, tableID, firstAtribute, secondAtribute, thirdAtribute, hasNumbering) {
+            $.ajax({
+                url: url,
+            }).done(function (json) {
+                for (var i = 0; i < json.length; i++) {
+                    var score = json[i];
+                    var numbering = hasNumbering ? "<td>"+(i+1)+"</td>" : "";
+                    $(tableID + " tbody").append($("<tr>"+numbering+"<td>" + score[firstAtribute] + "<td>" + score[secondAtribute] + "<td>" + score[thirdAtribute] + "</tr>"));
+                }
+            });
+        }
+
+        loadScores("/api/score/Maze", "#ScoreServiceTable", "player","point", "playerAt", true);
+        loadScores("/api/comment/Maze", "#CommentServiceTable", "player","comment", "player_at", false);
+    });
+
+    console.log("halo");
+
+
+</script>
+<!--/*@thymesVar id="message" type="java.lang.String"*/-->
+<!--/*@thymesVar id="scores" type="java.util.List<sk.tuke.gamestudio.entity.Score>"*/-->
+<!--/*@thymesVar id="userController" type="sk.tuke.gamestudio.server.controller.UserController"*/-->
+<!--/*@thymesVar id="minesController" type="sk.tuke.gamestudio.server.controller.MazeController"*/-->
+
+    <video autoplay muted playsinline loop class="video1">
+        <source src="/images/production_id%204182916%20(2160p).mp4">
+    </video>
+<div>
+    <div class="kola">
+<div id="minefieldFromService">
+
+
+
+</div>
+</div>
+</div>
+
+<div class="set">
+    <div class="Arrows">
+        <button id="Arrows-left"><</button>
+        <button id="Arrows-right">></button>
+    </div>
+    <div class="setting">
+        <form action="/Mazes/newGame">
+
+
+            <button id="button" type="submit">New Game</button>
+        </form>
+    </div>
+</div>
+</div>
+<script>
+    document.getElementById("Arrows-right").addEventListener('click', function() {
+        // Send request to the server
+        fetch('/Arrow-leftPressed', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ clicked: true }) // Indicate that the button was clicked
+        }).then(function(response) {
+            // Check if the fetch request was successful
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // If successful, call refreshMinefield
+            refreshMinefield("/Mazes/Maze");
+        });
+    });
+
+    document.getElementById("Arrows-left").addEventListener('click', function() {
+        // Send request to the server
+        fetch('/Arrow-leftPressed', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ clicked: false }) // Indicate that the button was clicked
+        }).then(function(response) {
+            // Check if the fetch request was successful
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // If successful, call refreshMinefield
+            refreshMinefield("/Mazes/Maze");
+        });
+    });
+
+
+
+
+    //<![CDATA[
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
